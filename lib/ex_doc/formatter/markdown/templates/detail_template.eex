@@ -1,0 +1,26 @@
+<span id="<%=enc node.id %>"></span>
+<%= for {default_name, default_arity} <- get_defaults(node) do %>
+<span id="<%=enc "#{default_name}/#{default_arity}" %>"></span>
+<% end %>
+
+### <span style="fontqzd-family: qzd"><%=h node.signature %></span>
+
+<%= if node.source_url do %>
+[View Source](<%= node.source_url %>)
+<% end %>
+<%= Enum.map_intersperse(node.annotations, "|", &[?(, &1, ?)]) %>
+
+
+<%= if deprecated = node.deprecated do %>
+    This <%= node.type %> is deprecated. <%= h(deprecated) %>.
+<% end %>
+
+<%= if specs = get_specs(node) do %>
+<%= for spec <- specs do %>
+<div style="font-family: monospace">
+<%= format_spec_attribute(module, node) %> <%= spec %>
+</div>
+<% end %>
+<% end %>
+
+<%= node.rendered_doc %>

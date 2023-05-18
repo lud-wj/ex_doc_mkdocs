@@ -38,7 +38,7 @@ defmodule ExDocMkdocs.MixProject do
   defp mkdocs do
     [
       site_name: "Sample app",
-      repo_url: "https://github.com/lud-wttj/ex_doc_mkdocs/",
+      repo_url: "https://github.com/lud-wj/ex_doc_mkdocs/",
       theme: "material"
     ]
   end

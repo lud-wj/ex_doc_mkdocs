@@ -2,16 +2,58 @@ defmodule ExDoc.Formatter.MARKDOWN.Templates do
   require EEx
   import ExDoc.Utils
 
+  alias ExDoc.Formatter.HTML
+
+  import ExDoc.Formatter.HTML.Templates,
+    only: [get_defaults: 1, pretty_type: 1, get_specs: 1, format_spec_attribute: 2]
+
   def module_page(module_node, nodes_map, config) do
-    # summary = module_summary(module_node)
-    module_template(config, module_node, _summary = [], nodes_map)
+    summary = module_summary(module_node)
+    module_template(config, module_node, summary, nodes_map)
+  end
+
+  def module_summary(module_node) do
+    entries =
+      [Types: module_node.typespecs] ++
+        docs_groups(module_node.docs_groups, module_node.docs)
+
+    Enum.reject(entries, fn {_type, nodes} -> nodes == [] end)
+  end
+
+  defp docs_groups(groups, docs) do
+    for group <- groups, do: {group, Enum.filter(docs, &(&1.group == group))}
+  end
+
+  defp enc(binary), do: URI.encode(binary)
+
+  defp indent(binary, amount, skip_first \\ false) when is_binary(binary) do
+    indent = String.duplicate(" ", amount)
+
+    indented =
+      binary
+      |> String.split("\n")
+      |> Enum.intersperse(indent)
+
+    if skip_first,
+      do: indented,
+      else: [indent | indented]
+  end
+
+  def synopsis(nil), do: nil
+
+  def synopsis(doc) when is_binary(doc) do
+    case :binary.split(doc, "\n\n") do
+      [left, _] -> String.trim_trailing(left, ":")
+      [all] -> all
+    end
   end
 
   templates = [
-    module_template: [:config, :module, :summary, :nodes_map]
+    module_template: [:config, :module, :summary, :nodes_map],
+    summary_template: [:name, :nodes],
+    detail_template: [:node, :module]
 
     # Templates existing in the original ExDoc.Formatter.HTML.Templates
-    # detail_template: [:node, :module],
     # footer_template: [:config, :node],
     # head_template: [:config, :page],
     # not_found_template: [:config, :nodes_map],
@@ -20,7 +62,6 @@ defmodule ExDoc.Formatter.MARKDOWN.Templates do
     # extra_template: [:config, :node, :type, :nodes_map, :refs],
     # search_template: [:config, :nodes_map],
     # sidebar_template: [:config, :nodes_map],
-    # summary_template: [:name, :nodes],
     # redirect_template: [:config, :redirect_to],
     # settings_button_template: []
   ]

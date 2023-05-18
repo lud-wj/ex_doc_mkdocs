@@ -93,7 +93,35 @@ defmodule ExDoc.Formatter.MARKDOWN do
 
     language = node.language
 
-    render_doc(node, language, [{:id, node.id} | autolink_opts])
+    docs =
+      for child_node <- node.docs do
+        id = id(node, child_node)
+        autolink_opts = autolink_opts ++ [id: id, line: child_node.doc_line]
+        specs = Enum.map(child_node.specs, &language.autolink_spec(&1, autolink_opts))
+        child_node = %{child_node | specs: specs}
+        render_doc(child_node, language, autolink_opts)
+      end
+
+    typespecs =
+      for child_node <- node.typespecs do
+        id = id(node, child_node)
+        autolink_opts = autolink_opts ++ [id: id, line: child_node.doc_line]
+
+        child_node = %{
+          child_node
+          | spec:
+              language.autolink_spec(child_node.spec, autolink_opts)
+              |> IO.inspect(label: ~S/auto/)
+        }
+
+        render_doc(child_node, language, autolink_opts)
+      end
+
+    %{
+      render_doc(node, language, [{:id, node.id} | autolink_opts])
+      | docs: docs,
+        typespecs: typespecs
+    }
   end
 
   defp render_doc(%{doc: nil} = node, _language, _autolink_opts),
@@ -101,7 +129,19 @@ defmodule ExDoc.Formatter.MARKDOWN do
 
   defp render_doc(%{doc: doc} = node, language, autolink_opts) do
     rendered = autolink_and_render(doc, language, autolink_opts)
-    %{node | rendered_doc: rendered}
+    %{node | rendered_doc: :erlang.iolist_to_binary(rendered)}
+  end
+
+  defp id(%{id: mod_id}, %{id: "c:" <> id}) do
+    "c:" <> mod_id <> "." <> id
+  end
+
+  defp id(%{id: mod_id}, %{id: "t:" <> id}) do
+    "t:" <> mod_id <> "." <> id
+  end
+
+  defp id(%{id: mod_id}, %{id: id}) do
+    mod_id <> "." <> id
   end
 
   defp autolink_and_render(doc, language, autolink_opts) do

@@ -20,15 +20,35 @@ defmodule ExDocMkdocs.DocAST do
     [indentation(ctx), to_iolist(content, ctx), "\n\n"]
   end
 
+  def to_iolist({tag, _, content, _meta}, ctx) when tag in [:h1, :h2, :h3, :h4, :h5, :h6] do
+    [tag_prefix(tag), to_iolist(content, ctx), "\n\n"]
+  end
+
   def to_iolist({:a, attrs, content, _meta}, ctx) do
     href = Keyword.fetch!(attrs, :href)
     ["[", to_iolist(content, ctx), "](", href, ")"]
   end
 
-  def to_iolist({:code, attrs, content, _meta}, %{indent: 0}) do
+  def to_iolist({:code, attrs, content, _meta}, ctx) do
     case attrs[:class] do
-      "inline" -> ["`", content, "`"]
+      "inline" ->
+        ["`", to_iolist(content, ctx), "`"]
+
+      _ ->
+        to_iolist(content, ctx)
     end
+  end
+
+  def to_iolist({:pre, attrs, content, _meta}, %{indent: 0} = ctx) do
+    language =
+      Enum.find_value(content, fn
+        {:code, attrs, _, _} -> Keyword.get(attrs, :class)
+        _ -> "elixir"
+      end)
+
+    content |> IO.inspect(label: ~S/content/)
+    attrs |> IO.inspect(label: ~S/attrs/)
+    ["```", language || "", "\n", to_iolist(content, ctx), "\n```\n\n"]
   end
 
   def to_iolist({:ul, _, content, _meta}, ctx) do
@@ -50,18 +70,27 @@ defmodule ExDocMkdocs.DocAST do
     raise ArgumentError, "unsupported AST: #{inspect(ast)}"
   end
 
+  defp tag_prefix(tag) do
+    case tag do
+      :h1 -> "# "
+      :h2 -> "## "
+      :h3 -> "### "
+      :h4 -> "#### "
+      :h5 -> "##### "
+      :h6 -> "###### "
+    end
+  end
+
   defp indentation(ctx) do
     String.duplicate(" ", ctx.indent)
   end
 
-  defp reindent(bin, ctx) do
+  defp reindent(bin, ctx) when is_binary(bin) do
     ws = indentation(ctx)
-    binding() |> IO.inspect(label: ~S/binding()/)
 
     bin
     |> String.split("\n")
     |> Enum.intersperse(["\n", ws])
-    |> dbg()
   end
 
   defp indent(%Ctx{indent: base} = ctx, n) do

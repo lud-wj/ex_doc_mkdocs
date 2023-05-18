@@ -1,0 +1,10 @@
+### <%= name %>
+
+<%= for node <- nodes do %>
+[`<%=h node.signature %>`](#<%=enc node.id %>) <%= if deprecated = node.deprecated do %>(deprecated)<% end %>
+
+<%= if doc = node.rendered_doc do %>
+<div class="summary-synopsis"><%= synopsis(doc) %></div>
+<% end %>
+
+<% end %>

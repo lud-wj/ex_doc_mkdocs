@@ -7,7 +7,7 @@ defmodule ExDocMkdocs do
   Our best function is `hello/0`!
 
 
-  * this is a list item
+  * Our best function is `hello/0`!
     * with a nested item
       that spans multiple lines
     * and another nested item
@@ -19,6 +19,9 @@ defmodule ExDocMkdocs do
   * back to root
   """
 
+  @type world :: :world
+  @type helloed :: world() | binary()
+
   @doc """
   Hello world.
 
@@ -27,9 +30,29 @@ defmodule ExDocMkdocs do
       iex> ExDocMkdocs.hello()
       :world
 
+
+  ```javascript
+  console.log('coucou')
+  console.log('hello')
+  ```
   """
+  @spec hello() :: helloed()
   def hello do
     :world
+  end
+
+  @deprecated "use hello/0 instead"
+  def bonjour do
+    hello()
+  end
+
+  defmacro testmacro(do: block) do
+    quote do
+      case unquote(block) do
+        {:ok, v} -> v
+        {:error, reason} -> raise "error: #{inspect(reason)}"
+      end
+    end
   end
 
   def fetch_config do

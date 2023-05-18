@@ -6,6 +6,7 @@ debug-html:
 
 
 watch-code:
+  just run
   fswatch -o -m poll_monitor --event Updated --recursive lib | xargs  -I {} just run
 
 run:
