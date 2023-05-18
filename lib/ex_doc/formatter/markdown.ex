@@ -7,7 +7,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
   def run(project_nodes, config) do
     config = prepare_config(config)
     buildfile = Path.join(config.output, ".build")
-    # cleanup_build(buildfile, config)
+    cleanup_build(buildfile, config)
 
     File.mkdir_p!(markdown_dir(config))
 

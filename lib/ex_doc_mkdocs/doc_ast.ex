@@ -64,6 +64,14 @@ defmodule ExDocMkdocs.DocAST do
     to_iolist(content, indent(ctx, 2))
   end
 
+  def to_iolist({:em, _, content, _meta}, ctx) do
+    ["_", to_iolist(content, ctx), "_"]
+  end
+
+  def to_iolist({:strong, _, content, _meta}, ctx) do
+    ["**", to_iolist(content, ctx), "**"]
+  end
+
   def to_iolist(ast, _ctx) do
     raise ArgumentError, "unsupported AST: #{inspect(ast)}"
   end
