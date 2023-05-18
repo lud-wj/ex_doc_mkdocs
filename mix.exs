@@ -22,7 +22,10 @@ defmodule ExDocMkdocs.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.29.0", runtime: false},
-      {:jason, "~> 1.4", runtime: false}
+      {:jason, "~> 1.4", runtime: false},
+
+      # Dev
+      {:credo, "~> 1.7", only: [:dev], runtime: false}
     ]
   end
 

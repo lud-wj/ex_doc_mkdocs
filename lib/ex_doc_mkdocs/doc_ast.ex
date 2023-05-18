@@ -46,8 +46,6 @@ defmodule ExDocMkdocs.DocAST do
         _ -> "elixir"
       end)
 
-    content |> IO.inspect(label: ~S/content/)
-    attrs |> IO.inspect(label: ~S/attrs/)
     ["```", language || "", "\n", to_iolist(content, ctx), "\n```\n\n"]
   end
 

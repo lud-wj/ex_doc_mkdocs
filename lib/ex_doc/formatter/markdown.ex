@@ -106,14 +106,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
       for child_node <- node.typespecs do
         id = id(node, child_node)
         autolink_opts = autolink_opts ++ [id: id, line: child_node.doc_line]
-
-        child_node = %{
-          child_node
-          | spec:
-              language.autolink_spec(child_node.spec, autolink_opts)
-              |> IO.inspect(label: ~S/auto/)
-        }
-
+        child_node = %{child_node | spec: language.autolink_spec(child_node.spec, autolink_opts)}
         render_doc(child_node, language, autolink_opts, downgrade_headers: 2)
       end
 
@@ -153,7 +146,6 @@ defmodule ExDoc.Formatter.MARKDOWN do
   defp autolink_and_render(doc, language, autolink_opts) do
     doc
     |> language.autolink_doc(autolink_opts)
-    |> dbg()
     |> ExDocMkdocs.DocAST.to_iolist()
     |> tap(&IO.puts/1)
   end
