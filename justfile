@@ -4,11 +4,18 @@ docs:
 debug-html:
   rm -rf _build/dev/lib/ex_doc && mix docs --formatter html
 
+
+watch-code:
+  fswatch -o -m poll_monitor --event Updated --recursive lib | xargs  -I {} just run
+
 run:
-  # rm -rf doc
+  # rm -rf doc/site/*
   mkdir -p doc
   just docs
   # python -m pip install mkdocs-techdocs-core
-  cd doc/ && techdocs-cli generate --no-docker --verbose
-  find doc/site
-  find doc/markdown
+  cd doc/ && techdocs-cli generate --no-docker
+  # find doc/site
+  # find doc/markdown
+
+serve:
+  cd doc/site && live-server --port=8000

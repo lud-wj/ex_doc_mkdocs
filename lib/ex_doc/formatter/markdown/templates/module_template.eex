@@ -1,1 +1,11 @@
-Hello world!
+# <%= module.title %>
+
+<%= if deprecated = module.deprecated do %>
+  <div class="deprecated">
+    This <%= module.type %> is deprecated. <%= h(deprecated) %>.
+  </div>
+<% end %>
+
+<%= if doc = module.rendered_doc do %>
+<%= doc %>
+<% end %>

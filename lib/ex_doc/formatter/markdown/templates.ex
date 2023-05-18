@@ -1,5 +1,6 @@
 defmodule ExDoc.Formatter.MARKDOWN.Templates do
   require EEx
+  import ExDoc.Utils
 
   def module_page(module_node, nodes_map, config) do
     # summary = module_summary(module_node)

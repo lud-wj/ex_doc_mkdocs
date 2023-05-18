@@ -2,6 +2,8 @@ defmodule ExDocMkdocs do
   @moduledoc """
   Documentation for `ExDocMkdocs`.
 
+  TEST III
+
   Our best function is `hello/0`!
 
 
@@ -12,6 +14,8 @@ defmodule ExDocMkdocs do
       that spans multiple lines
     * and a badly indented
     that spans multiple lines
+      - super nested
+        wooohooo
   * back to root
   """
 

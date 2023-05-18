@@ -17,7 +17,7 @@ defmodule ExDocMkdocs.DocAST do
   end
 
   def to_iolist({:p, _, content, _meta}, ctx) do
-    ["\n", indentation(ctx), to_iolist(content, ctx), "\n"]
+    [indentation(ctx), to_iolist(content, ctx), "\n\n"]
   end
 
   def to_iolist({:a, attrs, content, _meta}, ctx) do
@@ -33,11 +33,17 @@ defmodule ExDocMkdocs.DocAST do
 
   def to_iolist({:ul, _, content, _meta}, ctx) do
     ws = indentation(ctx)
-    ["\n" | Enum.map(content, &[ws, to_iolist(&1, ctx)])]
+
+    lis =
+      Enum.map_intersperse(content, "\n", fn li ->
+        [ws, "- ", to_iolist(li, ctx)]
+      end)
+
+    ["\n" | lis]
   end
 
   def to_iolist({:li, _, content, _meta}, ctx) do
-    ["* ", to_iolist(content, indent(ctx, 2)), "\n"]
+    to_iolist(content, indent(ctx, 2))
   end
 
   def to_iolist(ast, _ctx) do

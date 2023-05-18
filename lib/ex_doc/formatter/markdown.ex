@@ -7,7 +7,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
   def run(project_nodes, config) do
     config = prepare_config(config)
     buildfile = Path.join(config.output, ".build")
-    cleanup_build(buildfile, config)
+    # cleanup_build(buildfile, config)
 
     File.mkdir_p!(markdown_dir(config))
 
@@ -92,6 +92,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
       ] ++ autolink_opts
 
     language = node.language
+
     render_doc(node, language, [{:id, node.id} | autolink_opts])
   end
 
@@ -148,13 +149,10 @@ defmodule ExDoc.Formatter.MARKDOWN do
       ExDocMkdocs.fetch_config()
       |> Map.new()
       |> Map.put_new(:theme, "material")
-      |> dbg()
 
     nav = [
       %{"Modules" => modules_nav(nodes_map.modules, config)}
     ]
-
-    nav |> IO.inspect(label: ~S/nav/)
 
     yaml_data =
       mkdocs_config
