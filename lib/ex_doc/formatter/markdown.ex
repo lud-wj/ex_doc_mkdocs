@@ -21,14 +21,11 @@ defmodule ExDoc.Formatter.MARKDOWN do
     all_files =
       generate_list(nodes_map.modules, nodes_map, config) ++
         generate_list(nodes_map.tasks, nodes_map, config) ++
-        generate_mkdocs_yml(nodes_map, config)
-
-    # generate_index(config)
+        generate_mkdocs_yml(nodes_map, config) ++ generate_index(config)
 
     generate_buildfile(Enum.sort(all_files), buildfile)
 
-    # project_nodes |> Enum.map(&IO.inspect/1)
-    config.output |> Path.join("index.md") |> Path.relative_to_cwd()
+    markdown_dir(config) |> Path.join("index.md") |> Path.relative_to_cwd()
   end
 
   defp markdown_dir(config) do
@@ -161,6 +158,19 @@ defmodule ExDoc.Formatter.MARKDOWN do
     File.write!(buildfile, entries)
   end
 
+  defp generate_index(config) do
+    filename = "index.md"
+    path = Path.join(markdown_dir(config), filename)
+
+    File.write!(path, """
+    # Documentation
+
+    This documentation is not ready to be read.
+    """)
+
+    [filename]
+  end
+
   defp generate_module_page(module_node, nodes_map, config) do
     path = module_path(module_node, config)
     content = Templates.module_page(module_node, nodes_map, config)
@@ -189,6 +199,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
       |> Map.put_new(:theme, "material")
 
     nav = [
+      %{"Home" => "index.md"},
       %{"Modules" => modules_nav(nodes_map.modules, config)}
     ]
 
@@ -197,7 +208,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
       |> Map.put(:nav, nav)
       |> Map.put(:docs_dir, Path.relative_to(markdown_dir(config), config.output))
 
-    yaml = Jason.encode!(yaml_data)
+    yaml = Jason.encode!(yaml_data, pretty: true)
     IO.puts(yaml)
     File.write!(Path.join(config.output, filename), yaml)
     [filename]

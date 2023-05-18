@@ -14,7 +14,7 @@ run:
   mkdir -p doc
   just docs
   # python -m pip install mkdocs-techdocs-core
-  cd doc/ && techdocs-cli generate --no-docker
+  cd doc/ && techdocs-cli generate --no-docker --verbose
   # find doc/site
   # find doc/markdown
 
