@@ -99,7 +99,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
         autolink_opts = autolink_opts ++ [id: id, line: child_node.doc_line]
         specs = Enum.map(child_node.specs, &language.autolink_spec(&1, autolink_opts))
         child_node = %{child_node | specs: specs}
-        render_doc(child_node, language, autolink_opts)
+        render_doc(child_node, language, autolink_opts, downgrade_headers: 2)
       end
 
     typespecs =
@@ -114,20 +114,26 @@ defmodule ExDoc.Formatter.MARKDOWN do
               |> IO.inspect(label: ~S/auto/)
         }
 
-        render_doc(child_node, language, autolink_opts)
+        render_doc(child_node, language, autolink_opts, downgrade_headers: 2)
       end
 
     %{
-      render_doc(node, language, [{:id, node.id} | autolink_opts])
+      render_doc(node, language, [{:id, node.id} | autolink_opts], [])
       | docs: docs,
         typespecs: typespecs
     }
   end
 
-  defp render_doc(%{doc: nil} = node, _language, _autolink_opts),
+  defp render_doc(%{doc: nil} = node, _language, _autolink_opts, _opts),
     do: node
 
-  defp render_doc(%{doc: doc} = node, language, autolink_opts) do
+  defp render_doc(%{doc: doc} = node, language, autolink_opts, opts) do
+    doc =
+      case opts[:downgrade_headers] do
+        nil -> doc
+        n -> downgrade_headers(doc, n)
+      end
+
     rendered = autolink_and_render(doc, language, autolink_opts)
     %{node | rendered_doc: :erlang.iolist_to_binary(rendered)}
   end
@@ -211,4 +217,27 @@ defmodule ExDoc.Formatter.MARKDOWN do
       &%{&1.title => Path.relative_to(module_path(&1, config), markdown_dir(config))}
     )
   end
+
+  defp downgrade_headers(term, 0), do: term
+  defp downgrade_headers(doc, n) when is_list(doc), do: Enum.map(doc, &downgrade_headers(&1, n))
+  defp downgrade_headers(doc, _n) when is_binary(doc), do: doc
+
+  defp downgrade_headers({tag, attrs, content, meta} = el, n)
+       when tag in [:h1, :h2, :h3, :h4, :h5, :h6] do
+    tag = downgrade_headers(tag, n)
+    content = downgrade_headers(content, n)
+    {tag, attrs, content, meta}
+  end
+
+  defp downgrade_headers({tag, attrs, content, meta} = el, n) do
+    content = downgrade_headers(content, n)
+    {tag, attrs, content, meta}
+  end
+
+  defp downgrade_headers(:h1, n), do: downgrade_headers(:h2, n - 1)
+  defp downgrade_headers(:h2, n), do: downgrade_headers(:h3, n - 1)
+  defp downgrade_headers(:h3, n), do: downgrade_headers(:h4, n - 1)
+  defp downgrade_headers(:h4, n), do: downgrade_headers(:h5, n - 1)
+  defp downgrade_headers(:h5, n), do: downgrade_headers(:h6, n - 1)
+  defp downgrade_headers(:h6, _), do: :h6
 end
