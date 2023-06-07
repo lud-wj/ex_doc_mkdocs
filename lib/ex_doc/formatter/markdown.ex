@@ -23,7 +23,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
         generate_list(nodes_map.tasks, nodes_map, config) ++
         generate_mkdocs_yml(nodes_map, config) ++ generate_index(config)
 
-    generate_buildfile(Enum.sort(all_files), buildfile)
+    generate_buildfile(all_files, buildfile)
 
     markdown_dir(config) |> Path.join("index.md") |> Path.relative_to_cwd()
   end
@@ -154,7 +154,7 @@ defmodule ExDoc.Formatter.MARKDOWN do
   end
 
   defp generate_buildfile(files, buildfile) do
-    entries = Enum.map(files, &[&1, "\n"])
+    entries = files |> Enum.sort() |> Enum.map(&[&1, "\n"])
     File.write!(buildfile, entries)
   end
 

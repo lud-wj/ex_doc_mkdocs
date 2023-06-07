@@ -3,7 +3,7 @@
 <span id="<%=enc "#{default_name}/#{default_arity}" %>"></span>
 <% end %>
 
-### <span style="fontqzd-family: qzd"><%=h node.signature %></span>
+### <span><%=h node.signature %></span>
 
 <%= if node.source_url do %>
 [View Source](<%= node.source_url %>)

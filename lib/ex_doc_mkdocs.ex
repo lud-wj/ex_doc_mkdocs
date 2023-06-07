@@ -7,16 +7,7 @@ defmodule ExDocMkdocs do
   Our best function is `hello/0`!
 
 
-  * Our best function is `hello/0`!
-    * with a nested item
-      that spans multiple lines
-    * and another nested item
-      that spans multiple lines
-    * and a badly indented
-    that spans multiple lines
-      - super nested
-        wooohooo
-  * back to root
+
   """
 
   @type world :: :world
@@ -106,7 +97,7 @@ defmodule ExDocMkdocs do
     expected_keys = [:site_name]
     allowed_keys = [:repo_url, :theme]
 
-    Enum.each(expected_keys, &expect_key(&1, config))
+    Enum.each(expected_keys, &expect_config_key(&1, config))
 
     config = Map.take(config, expected_keys ++ allowed_keys)
 
@@ -118,11 +109,11 @@ defmodule ExDocMkdocs do
     end)
   end
 
-  defp expect_key(key, config) when not is_map_key(config, key) do
+  defp expect_config_key(key, config) when not is_map_key(config, key) do
     raise "invalid mkdocs config, expected key #{inspect(key)} to be defined"
   end
 
-  defp expect_key(_key, config) do
+  defp expect_config_key(_key, config) do
     config
   end
 
