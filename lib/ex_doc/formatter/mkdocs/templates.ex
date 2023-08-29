@@ -2,10 +2,8 @@ defmodule ExDoc.Formatter.MKDOCS.Templates do
   require EEx
   import ExDoc.Utils
 
-  alias ExDoc.Formatter.HTML
-
   import ExDoc.Formatter.HTML.Templates,
-    only: [get_defaults: 1, pretty_type: 1, get_specs: 1, format_spec_attribute: 2]
+    only: [get_defaults: 1, get_specs: 1, format_spec_attribute: 2]
 
   def module_page(module_node, nodes_map, config) do
     summary = module_summary(module_node)
@@ -26,18 +24,18 @@ defmodule ExDoc.Formatter.MKDOCS.Templates do
 
   defp enc(binary), do: URI.encode(binary)
 
-  defp indent(binary, amount, skip_first \\ false) when is_binary(binary) do
-    indent = String.duplicate(" ", amount)
+  # defp indent(binary, amount, skip_first \\ false) when is_binary(binary) do
+  #   indent = String.duplicate(" ", amount)
 
-    indented =
-      binary
-      |> String.split("\n")
-      |> Enum.intersperse(indent)
+  #   indented =
+  #     binary
+  #     |> String.split("\n")
+  #     |> Enum.intersperse(indent)
 
-    if skip_first,
-      do: indented,
-      else: [indent | indented]
-  end
+  #   if skip_first,
+  #     do: indented,
+  #     else: [indent | indented]
+  # end
 
   def synopsis(nil), do: nil
 
@@ -49,7 +47,7 @@ defmodule ExDoc.Formatter.MKDOCS.Templates do
   end
 
   templates = [
-    module_template: [:config, :module, :summary, :nodes_map],
+    module_template: [:_config, :module, :summary, :_nodes_map],
     summary_template: [:name, :nodes],
     detail_template: [:node, :module],
     extra_template: [:node]

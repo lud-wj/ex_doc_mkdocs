@@ -295,7 +295,7 @@ defmodule ExDoc.Formatter.MKDOCS do
     generated_extras =
       extras
       |> with_prev_next()
-      |> Enum.map(fn {node, prev, next} ->
+      |> Enum.map(fn {node, _prev, _next} ->
         filename = "#{node.id}.md"
         output = extra_path(node, config)
 
