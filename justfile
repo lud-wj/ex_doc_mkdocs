@@ -1,9 +1,11 @@
+clean:
+  rm -rvf doc
+
 docs:
-  mix docs --formatter markdown
+  mix docs --formatter mkdocs
 
 debug-html:
   rm -rf _build/dev/lib/ex_doc && mix docs --formatter html
-
 
 watch-code:
   just run
@@ -15,8 +17,7 @@ run:
   just docs
   # python -m pip install mkdocs-techdocs-core
   cd doc/ && techdocs-cli generate --no-docker --verbose
-  # find doc/site
-  # find doc/markdown
 
-serve:
-  cd doc/site && live-server --port=8000
+serve: clean docs
+  tree doc
+  cd doc && mkdocs serve

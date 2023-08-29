@@ -8,6 +8,7 @@ defmodule ExDocMkdocs.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      docs: docs(),
       mkdocs: mkdocs(),
       modkit: modkit()
     ]
@@ -43,6 +44,16 @@ defmodule ExDocMkdocs.MixProject do
       site_name: "Sample app",
       repo_url: "https://github.com/lud-wj/ex_doc_mkdocs/",
       theme: "material"
+    ]
+  end
+
+  defp docs do
+    [
+      extras: [
+        "guides/how-to-use.md"
+      ],
+      extra_section: "Guides",
+      nest_modules_by_prefix: [ExDoc, ExDoc.Formatter, ExDocMkdocs]
     ]
   end
 end

@@ -1,50 +1,7 @@
 defmodule ExDocMkdocs do
   @moduledoc """
   Documentation for `ExDocMkdocs`.
-
-  TEST III
-
-  Our best function is `hello/0`!
-
-
-
   """
-
-  @type world :: :world
-  @type helloed :: world() | binary()
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ExDocMkdocs.hello()
-      :world
-
-
-  ```javascript
-  console.log('coucou')
-  console.log('hello')
-  ```
-  """
-  @spec hello() :: helloed()
-  def hello do
-    :world
-  end
-
-  @deprecated "use hello/0 instead"
-  def bonjour do
-    hello()
-  end
-
-  defmacro testmacro(do: block) do
-    quote do
-      case unquote(block) do
-        {:ok, v} -> v
-        {:error, reason} -> raise "error: #{inspect(reason)}"
-      end
-    end
-  end
 
   def fetch_config do
     fetch_config(Mix.Project.get())

@@ -1,4 +1,4 @@
-defmodule ExDoc.Formatter.MARKDOWN.Templates do
+defmodule ExDoc.Formatter.MKDOCS.Templates do
   require EEx
   import ExDoc.Utils
 
@@ -51,7 +51,8 @@ defmodule ExDoc.Formatter.MARKDOWN.Templates do
   templates = [
     module_template: [:config, :module, :summary, :nodes_map],
     summary_template: [:name, :nodes],
-    detail_template: [:node, :module]
+    detail_template: [:node, :module],
+    extra_template: [:node]
 
     # Templates existing in the original ExDoc.Formatter.HTML.Templates
     # footer_template: [:config, :node],
@@ -59,7 +60,6 @@ defmodule ExDoc.Formatter.MARKDOWN.Templates do
     # not_found_template: [:config, :nodes_map],
     # api_reference_entry_template: [:module_node],
     # api_reference_template: [:nodes_map],
-    # extra_template: [:config, :node, :type, :nodes_map, :refs],
     # search_template: [:config, :nodes_map],
     # sidebar_template: [:config, :nodes_map],
     # redirect_template: [:config, :redirect_to],

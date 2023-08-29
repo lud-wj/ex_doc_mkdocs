@@ -39,7 +39,7 @@ defmodule ExDocMkdocs.DocAST do
     end
   end
 
-  def to_iolist({:pre, attrs, content, _}, %{indent: 0} = ctx) do
+  def to_iolist({:pre, _attrs, content, _}, %{indent: 0} = ctx) do
     language =
       Enum.find_value(content, fn
         {:code, attrs, _, _} -> Keyword.get(attrs, :class)
