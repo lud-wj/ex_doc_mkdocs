@@ -50,12 +50,10 @@ defmodule ExDocMkdocs.DocAST do
   end
 
   def to_iolist({:ul, _, content, meta}, ctx) do
-    meta |> IO.inspect(label: ~S/meta/)
     format_list("- ", content, ctx)
   end
 
   def to_iolist({:ol, _, content, meta}, ctx) do
-    meta |> IO.inspect(label: ~S/meta/)
     format_list("1. ", content, ctx)
   end
 

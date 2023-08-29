@@ -348,8 +348,6 @@ defmodule ExDoc.Formatter.MKDOCS do
       |> Map.new()
       |> Map.put_new(:theme, "material")
 
-    config.extra_section |> IO.inspect(label: ~S/config.extra_section/)
-
     nav = [
       %{"Home" => "index.md"},
       %{"Modules" => modules_nav(nodes_map.modules, config)},
@@ -395,7 +393,6 @@ defmodule ExDoc.Formatter.MKDOCS do
         }
     end)
     |> :lists.flatten()
-    |> dbg()
   end
 
   defp deprefix(string, prefix) do
