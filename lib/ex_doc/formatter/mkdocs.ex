@@ -246,7 +246,6 @@ defmodule ExDoc.Formatter.MKDOCS do
     doc
     |> language.autolink_doc(autolink_opts)
     |> ExDocMkdocs.DocAST.to_iolist()
-    |> tap(&IO.puts/1)
   end
 
   defp generate_list(nodes, nodes_map, config) do
@@ -300,10 +299,10 @@ defmodule ExDoc.Formatter.MKDOCS do
         filename = "#{node.id}.md"
         output = extra_path(node, config)
 
-        refs = %{
-          prev: prev && %{path: "#{prev.id}.html", title: prev.title},
-          next: next && %{path: "#{next.id}.html", title: next.title}
-        }
+        # refs = %{
+        #   prev: prev && %{path: "#{prev.id}.html", title: prev.title},
+        #   next: next && %{path: "#{next.id}.html", title: next.title}
+        # }
 
         # extension = node.source_path && Path.extname(node.source_path)
         # md = Templates.extra_template(config, node, extra_type(extension), refs)
@@ -360,7 +359,6 @@ defmodule ExDoc.Formatter.MKDOCS do
       |> Map.put(:docs_dir, Path.relative_to(markdown_dir(config), config.output))
 
     yaml = Jason.encode!(yaml_data, pretty: true)
-    IO.puts(yaml)
     File.write!(Path.join(config.output, filename), yaml)
     [filename]
   end

@@ -49,11 +49,11 @@ defmodule ExDocMkdocs.DocAST do
     ["```", language || "", "\n", to_iolist(content, ctx), "\n```\n\n"]
   end
 
-  def to_iolist({:ul, _, content, meta}, ctx) do
+  def to_iolist({:ul, _, content, _meta}, ctx) do
     format_list("- ", content, ctx)
   end
 
-  def to_iolist({:ol, _, content, meta}, ctx) do
+  def to_iolist({:ol, _, content, _meta}, ctx) do
     format_list("1. ", content, ctx)
   end
 
