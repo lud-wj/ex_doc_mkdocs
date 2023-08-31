@@ -48,10 +48,6 @@ defmodule ExDocMkdocs.MixProject do
 
   defp docs do
     [
-      extras: [
-        "guides/how-to-use.md"
-      ],
-      extra_section: "Guides",
       nest_modules_by_prefix: [ExDoc, ExDoc.Formatter, ExDocMkdocs]
     ]
   end
